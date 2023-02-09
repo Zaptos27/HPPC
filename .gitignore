@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+
+# Other files from python
+*.pdf
+*.pdf
+*.eps
+*.gif
+*.png
+*.mp4
+*.npy
+*.npz
+
