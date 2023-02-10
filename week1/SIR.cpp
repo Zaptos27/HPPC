@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <functional> 
-#include <tuple>
 #include <math.h>
+#include <fstream>
+#include <string>
+
 
 using namespace std;
 
@@ -28,58 +30,52 @@ vector<double> vector_multiply(vector<double> v, double mult){
 }
 
 vector<double> vector_sum(vector<double> a, vector<double> b){
-    transform (a.begin(), a.end(), b.begin(), a.begin(), std::plus<double>());
+    transform (a.begin(), a.end(), b.begin(), a.begin(), plus<double>());
     return a;
 }
 
-tuple<vector<double>, vector<vector<double>>> euler(double dt, double time_stop, vector<double> init_param){
-    vector<vector<double>> SIR_out = {init_param};
-    vector<double> time_step = {0};
-    int reserve = time_stop/dt;
-    SIR_out.reserve(reserve);
-    time_step.reserve(reserve);
-    for(int i = 0; i < reserve; i++){
-        SIR_out.push_back(vector_sum(SIR_out[i],vector_multiply(SIR_dx(SIR_out[i]),dt)));
-        time_step.push_back(time_step[i]+dt);
+
+void euler(double dt, double time_stop, vector<double> param, string filename="out.txt"){
+    ofstream outfile(filename);
+    outfile << "t\tS\tI\tR\n";
+    outfile << 0 <<"\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
+    for(int i = 1; i<(int)ceil(time_stop/dt)+1; i++){
+        param = vector_sum(param,vector_multiply(SIR_dx(param),dt));
+        outfile << i*dt << "\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
     }
-    return make_tuple(time_step,SIR_out);
+    outfile.close();
 }
 
-
-
-tuple<vector<double>, vector<vector<double>>> RK45(double dt, double time_stop, vector<double> init_param, double tolerance = 1e-4, int max_step = 100000){
-    vector<vector<double>> SIR_out = {init_param};
-    vector<double> time_step = {0};
-    int reserve = 2*time_stop/dt;
-    SIR_out.reserve(reserve);
-    time_step.reserve(reserve);
+void RK45(double dt, double time_stop, vector<double> param, string filename="out.txt", double tolerance = 1e-4, int max_step = 100000){
+    ofstream outfile(filename);
+    outfile << "t\tS\tI\tR\n";
+    outfile << 0 <<"\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
+    double current_time = 0;
     for(int i = 0; i<max_step; i++){
-        vector<double> k1 = SIR_dx(SIR_out[i]);
-        vector<double> k2 = SIR_dx(vector_sum(SIR_out[i],vector_multiply(k1,dt*0.5)));
-        vector<double> k3 = SIR_dx(vector_sum(SIR_out[i],vector_sum(vector_multiply(k1,dt*0.25), vector_multiply(k2 ,dt*0.25))));
-        vector<double> k4 = SIR_dx(vector_sum(SIR_out[i],vector_sum(vector_multiply(k2,dt), vector_multiply(k3 ,dt*2))));
-        vector<double> k5 = SIR_dx(vector_sum(SIR_out[i],vector_sum(vector_sum(vector_multiply(k1,7./27*dt), vector_multiply(k2 ,10./27*dt)),vector_multiply(k4 ,1./27*dt))));
-        vector<double> k6 = SIR_dx(vector_sum(SIR_out[i],vector_sum(vector_sum(vector_sum(vector_sum(vector_multiply(k1,28./625*dt), vector_multiply(k2 ,-1./5*dt)),vector_multiply(k3 ,546./625*dt)),vector_multiply(k4 ,54./625*dt)),vector_multiply(k5 ,-378./625*dt))));
+        current_time += dt;
+        vector<double> k1 = SIR_dx(param);
+        vector<double> k2 = SIR_dx(vector_sum(param,vector_multiply(k1,dt*0.5)));
+        vector<double> k3 = SIR_dx(vector_sum(param,vector_sum(vector_multiply(k1,dt*0.25), vector_multiply(k2 ,dt*0.25))));
+        vector<double> k4 = SIR_dx(vector_sum(param,vector_sum(vector_multiply(k2,dt), vector_multiply(k3 ,dt*2))));
+        vector<double> k5 = SIR_dx(vector_sum(param,vector_sum(vector_sum(vector_multiply(k1,7./27*dt), vector_multiply(k2 ,10./27*dt)),vector_multiply(k4 ,1./27*dt))));
+        vector<double> k6 = SIR_dx(vector_sum(param,vector_sum(vector_sum(vector_sum(vector_sum(vector_multiply(k1,28./625*dt), vector_multiply(k2 ,-1./5*dt)),vector_multiply(k3 ,546./625*dt)),vector_multiply(k4 ,54./625*dt)),vector_multiply(k5 ,-378./625*dt))));
 
-        SIR_out.push_back(vector_sum(SIR_out[i],vector_sum(vector_sum(vector_sum(vector_multiply(k1,1./24*dt),vector_multiply(k4 ,5./48*dt)),vector_multiply(k5 ,27./56*dt)),vector_multiply(k6 ,125./336 *dt))));
-        time_step.push_back(time_step[i]+dt);
-        if(time_step[time_step.size()-1]>time_stop){
-            return make_tuple(time_step,SIR_out);
+        param = vector_sum(param,vector_sum(vector_sum(vector_sum(vector_multiply(k1,1./24*dt),vector_multiply(k4 ,5./48*dt)),vector_multiply(k5 ,27./56*dt)),vector_multiply(k6 ,125./336 *dt)));
+        outfile << current_time << "\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
+        if(current_time>time_stop){
+            break;
         }
         vector<double> TE = vector_sum(vector_sum(vector_sum(vector_sum(vector_multiply(k1,-1./8),vector_multiply(k3,-2./3)),vector_multiply(k4,-1./16)),vector_multiply(k5,27./56)),vector_multiply(k6,125./336));
         vector_absinverse(TE);
         vector<double> temp = vector_multiply(TE,0.9*dt*pow(tolerance,0.2));
         dt = *min_element(temp.begin(),temp.end());
     }
-    return make_tuple(time_step,SIR_out);
+
 }
 
 
-
-
-
-
 int main(){
-    
+    euler(0.01, 500, {999,1,0}, "SIR_out_euler.txt");
+    RK45(0.01, 500, {999,1,0}, "SIR_out_RK45.txt");
     return 0;
 }
