@@ -40,3 +40,7 @@
 *.npy
 *.npz
 
+
+#week 1 files
+week1/SIR_out_RK45.txt
+

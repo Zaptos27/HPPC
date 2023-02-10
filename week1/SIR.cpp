@@ -46,7 +46,7 @@ void euler(double dt, double time_stop, vector<double> param, string filename="o
     outfile.close();
 }
 
-void RK45(double dt, double time_stop, vector<double> param, string filename="out.txt", double tolerance = 1e-4, int max_step = 100000){
+void RK45(double dt, double time_stop, vector<double> param, string filename="out.txt", double tolerance = 1e-4, int max_step = 10000000){
     ofstream outfile(filename);
     outfile << "t\tS\tI\tR\n";
     outfile << 0 <<"\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
@@ -76,6 +76,6 @@ void RK45(double dt, double time_stop, vector<double> param, string filename="ou
 
 int main(){
     euler(0.01, 500, {999,1,0}, "SIR_out_euler.txt");
-    RK45(0.01, 500, {999,1,0}, "SIR_out_RK45.txt");
+    RK45(0.001, 500, {999,1,0}, "SIR_out_RK45.txt",1e-7);
     return 0;
 }
