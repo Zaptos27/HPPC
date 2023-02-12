@@ -11,7 +11,7 @@ data_RK45_v = np.loadtxt('SIR_out_RK4_recoverd.txt',skiprows=1).T
 
 
 plt.figure(figsize=(14,10))
-plt.title('SIR numerically solve with the RK4 with recoverd')
+plt.title('SIR numerically solve with the RK4 with recovered')
 plt.plot(data_RK45_v[0],data_RK45_v[1],label = 'S')
 plt.plot(data_RK45_v[0],data_RK45_v[2],label = 'I')
 plt.plot(data_RK45_v[0],data_RK45_v[3],label = 'R')
