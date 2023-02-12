@@ -48,7 +48,8 @@ void euler(double dt, double time_stop, vector<double> param, string filename="o
     }
     outfile.close();
 }
-
+// RK45 but we don't use it which is why it is commented out
+/*
 void RK45(double dt, double time_stop, vector<double> param, string filename="out.txt", double tolerance = 1e-4, bool bool_random = false, int max_step = 10000000){
     std::random_device rd; 
     std::mt19937 gen(rd());
@@ -82,11 +83,46 @@ void RK45(double dt, double time_stop, vector<double> param, string filename="ou
     }
 
 }
+*/
+
+void RK4(double dt, double time_stop, vector<double> param, string filename="out.txt", bool bool_random = false){
+    std::random_device rd; 
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(-0.01, 0.01);
+    ofstream outfile(filename);
+    outfile << "t\tS\tI\tR\n";
+    outfile << 0 <<"\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
+    double current_time = 0;
+    for(int i = 1; i<(int)ceil(time_stop/dt)+1; i++){
+        current_time += dt;
+        vector<double> k1 = SIR_dx(param);
+        vector<double> k2 = SIR_dx(vector_sum(param,vector_multiply(k1,dt*0.5)));
+        vector<double> k3 = SIR_dx(vector_sum(param,vector_sum(vector_multiply(k1,dt*0.5), vector_multiply(k2 ,dt*0.5))));
+        vector<double> k4 = SIR_dx(vector_sum(param, vector_multiply(k3 ,dt)));
+
+        param = vector_sum(param,vector_sum(vector_sum(vector_sum(vector_multiply(k1,1./6*dt),vector_multiply(k2 ,2./6*dt)),vector_multiply(k3 ,2./6*dt)),vector_multiply(k4 ,1./6 *dt)));
+        outfile << current_time << "\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
+        if(bool_random && i%100==0){
+            bet += dis(gen);
+            gam += dis(gen);
+            if(gam<=0){
+                gam = 0;
+            }
+            if(bet<=0){
+                bet = 0;
+            }
+        }
+    }
+
+}
+
+
 
 
 int main(){
     euler(0.01, 500, {999,1,0}, "SIR_out_euler.txt");
-    RK45(0.001, 500, {999,1,0}, "SIR_out_RK45.txt",1e-5);
-    RK45(0.001, 500, {999,1,0}, "SIR_out_RK45_random.txt",1e-3, true);
+    RK4(0.01, 500, {999,1,0}, "SIR_out_RK4.txt");
+    RK4(0.01, 500, {572,1,427}, "SIR_out_RK4_recoverd.txt");
+    RK4(0.01, 500, {999,1,0}, "SIR_out_RK4_random.txt", true);
     return 0;
 }
