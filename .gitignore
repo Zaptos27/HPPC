@@ -41,4 +41,5 @@
 *.npz
 
 
-
+# test file for lazyness
+test
