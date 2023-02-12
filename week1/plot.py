@@ -70,7 +70,7 @@ print(np.where(np.isclose(np.sum(data_RK45_r[1:],axis=0),1000)==False))
 
 #Two ways of doing integral checking if int\gammaI = R
 print(np.sum((data_euler[2]+np.roll(data_euler[2],-1))[:-1])*0.01/2*0.1,data_euler[3,-1])
-print(0.01/2*(np.sum(data_euler[2, 1:-1])*2+data_euler[2,1]+data_euler[2,-1])*0.1,data_euler[3,-1])
+print(0.01/2*(np.sum(data_RK45[2, 1:-1])*2+data_RK45[2,1]+data_RK45[2,-1])*0.1,data_RK45[3,-1])
 
 
 #Checking if below zero
@@ -78,16 +78,16 @@ print(np.where(data_euler[1:]<0))
 print(np.where(data_RK45[1:]<0),len(data_RK45))
 
 # Check monotone
-for i in range(len(data_euler[3])-1):
-    if data_euler[3, i]>data_euler[3, i+1]:
+for i in range(len(data_RK45[3])-1):
+    if data_RK45[3, i]>data_RK45[3, i+1]:
         print()
         print("R is not monotone", i)
         break
 else:
     print("R is monotone")
 
-for i in range(len(data_euler[1])-1):
-    if data_euler[1,i]<data_euler[1,i+1]:
+for i in range(len(data_RK45[1])-1):
+    if data_RK45[1,i]<data_RK45[1,i+1]:
         print("S is not monotone", i)
         break
 else:
@@ -95,6 +95,7 @@ else:
 
 
 # Check if max hældning
-R_diff = np.diff(data_euler[3])
-S_diff = np.diff(data_euler[1])
+R_diff = np.diff(data_RK45[3])
+S_diff = np.diff(data_RK45[1])
 print(np.argmax(R_diff),np.argmin(S_diff),np.argmax(data_euler[2]))
+#print(data_RK45[1,np.where(np.isclose(data_RK45[1],data_RK45[3],rtol=1e-3))])
