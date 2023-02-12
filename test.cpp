@@ -3,11 +3,15 @@
 #include <typeinfo>
 
 using namespace std;
-
+int i = 0;
+int test(){
+    i+=1;
+    return i;
+}
 
 int main(){
-    double a = 100.23;
-    double b = 0.1;
-    cout << ((int)ceil(a/b)) << endl;
+    test();
+    cout << test();
+    cout << test();
     return 0;
 }

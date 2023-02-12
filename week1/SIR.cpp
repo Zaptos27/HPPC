@@ -4,15 +4,18 @@
 #include <math.h>
 #include <fstream>
 #include <string>
+#include <random>
 
 
 using namespace std;
+double bet = 0.2; // giving the namespace gives issues this is the quick fix
+double gam = 0.1; // giving the namespace gives issues this is the quick fix
 
-vector<double> SIR_dx(vector<double> param,int N=1000, double beta = 1/5., double gamma = 1/10.){
+vector<double> SIR_dx(vector<double> param,int N=1000){
     vector<double> vec(3);
-    vec[0] = -beta*param[1]*param[0]/N;
-    vec[1] = beta*param[1]*param[0]/N-gamma*param[1];
-    vec[2] = gamma*param[1];
+    vec[0] = -bet*param[1]*param[0]/N;
+    vec[1] = bet*param[1]*param[0]/N-gam*param[1];
+    vec[2] = gam*param[1];
     return vec;
 }
 
@@ -46,7 +49,10 @@ void euler(double dt, double time_stop, vector<double> param, string filename="o
     outfile.close();
 }
 
-void RK45(double dt, double time_stop, vector<double> param, string filename="out.txt", double tolerance = 1e-4, int max_step = 10000000){
+void RK45(double dt, double time_stop, vector<double> param, string filename="out.txt", double tolerance = 1e-4, bool bool_random = false, int max_step = 10000000){
+    std::random_device rd; 
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(-0.01, 0.01);
     ofstream outfile(filename);
     outfile << "t\tS\tI\tR\n";
     outfile << 0 <<"\t"<< param[0] << "\t"<< param[1]  << "\t"<< param[2] <<"\n";
@@ -69,6 +75,10 @@ void RK45(double dt, double time_stop, vector<double> param, string filename="ou
         vector_absinverse(TE);
         vector<double> temp = vector_multiply(TE,0.9*dt*pow(tolerance,0.2));
         dt = *min_element(temp.begin(),temp.end());
+        if(bool_random && i%500==0){
+            bet += dis(gen);
+            gam += dis(gen);
+        }
     }
 
 }
@@ -77,5 +87,6 @@ void RK45(double dt, double time_stop, vector<double> param, string filename="ou
 int main(){
     euler(0.01, 500, {999,1,0}, "SIR_out_euler.txt");
     RK45(0.001, 500, {999,1,0}, "SIR_out_RK45.txt",1e-5);
+    RK45(0.001, 500, {999,1,0}, "SIR_out_RK45_random.txt",1e-3, true);
     return 0;
 }
