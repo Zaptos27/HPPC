@@ -76,6 +76,6 @@ void RK45(double dt, double time_stop, vector<double> param, string filename="ou
 
 int main(){
     euler(0.01, 500, {999,1,0}, "SIR_out_euler.txt");
-    RK45(0.001, 500, {999,1,0}, "SIR_out_RK45.txt",1e-7);
+    RK45(0.001, 500, {999,1,0}, "SIR_out_RK45.txt",1e-5);
     return 0;
 }
