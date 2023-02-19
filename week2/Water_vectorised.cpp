@@ -139,7 +139,7 @@ public:
 /* system class */
 class System {
 public:
-    std::vector<Molecule> molecules;          // all the molecules in the system
+    Molecules molecules;          // all the molecules in the system
     double time = 0;                          // current simulation time
 };
 
@@ -183,7 +183,8 @@ public:
 
 // Given a bond, updates the force on all atoms correspondingly
 void UpdateBondForces(System& sys){
-    for (Molecule& molecule : sys.molecules)
+    //for (Molecule& molecule : sys.molecules)
+    Molecules& molecule = sys.molecules;
     // Loops over the (2 for water) bond constraints
     for (Bond& bond : molecule.bonds){
         auto& atom1=molecule.atoms[bond.a1];
@@ -200,7 +201,8 @@ void UpdateBondForces(System& sys){
 // Iterates over all bonds in molecules (for water only 2: the left and right)
 // And updates forces on atoms correpondingly
 void UpdateAngleForces(System& sys){
-    for (Molecule& molecule : sys.molecules)
+    //for (Molecule& molecule : sys.molecules)
+    Molecules& molecule = sys.molecules;
     for (Angle& angle : molecule.angles){
         //====  angle forces  (H--O---H bonds) U_angle = 0.5*k_a(phi-phi_0)^2
         //f_H1 =  K(phi-ph0)/|H1O|*Ta
@@ -273,10 +275,12 @@ void UpdateNonBondedForces(System& sys){
 // integrating the system for one time step using Leapfrog symplectic integration
 void Evolve(System &sys, Sim_Configuration &sc){
 
-    // Kick velocities and zero forces for next update
+    // Kick velatomocities and zero forces for next update
     // Drift positions: Loop over molecules and atoms inside the molecules
-    for (Molecule& molecule : sys.molecules)
-    for (auto& atom : molecule.atoms){
+    //for (Molecule& molecule : sys.molecules)
+    Molecules& molecule = sys.molecules;
+    for (auto& atom : molecule.atoms)
+    for(int i = 0; i<molecule.no_mol;i++){
         atom.v += sc.dt/atom.mass*atom.f;    // Update the velocities
         atom.f  = {0,0,0};                   // set the forces zero to prepare for next potential calculation
         atom.p += sc.dt* atom.v;             // update position
@@ -305,9 +309,9 @@ System MakeWater(int N_molecules){
     const double angle = 104.45*deg2rad;    
 
     //         mass    ep    sigma charge name
-    Atom Oatom(16, 0.65,    0.31, -0.82, "O");  // Oxygen atom
-    Atom Hatom1( 1, 0.18828, 0.238, 0.41, "H"); // Hydrogen atom
-    Atom Hatom2( 1, 0.18828, 0.238, 0.41, "H"); // Hydrogen atom
+    Atoms Oatom(16, 0.65,    0.31, -0.82, "O");  // Oxygen atom
+    Atoms Hatom1( 1, 0.18828, 0.238, 0.41, "H"); // Hydrogen atom
+    Atoms Hatom2( 1, 0.18828, 0.238, 0.41, "H"); // Hydrogen atom
 
     // bonds beetween first H-O and second H-O respectively
     std::vector<Bond> waterbonds = {
@@ -323,14 +327,13 @@ System MakeWater(int N_molecules){
     System sys;
     for (int i = 0; i < N_molecules; i++){
         Vec3 P0{i * 0.2, i * 0.2, 0};
-        Oatom.p  = {P0.x, P0.y, P0.z};
-        Hatom1.p = {P0.x+L0*sin(angle/2), P0.y+L0*cos(angle/2), P0.z};
-        Hatom2.p = {P0.x-L0*sin(angle/2), P0.y+L0*cos(angle/2), P0.z};
-        std::vector<Atom> atoms {Oatom, Hatom1, Hatom2};
+        Oatom.p[i]  = {N_molecules,{P0.x, P0.y, P0.z}};
+        Hatom1.p[i] = {N_molecules,{P0.x+L0*sin(angle/2), P0.y+L0*cos(angle/2), P0.z}};
+        Hatom2.p[i] = {N_molecules,{P0.x-L0*sin(angle/2), P0.y+L0*cos(angle/2), P0.z}};
+        std::vector<Atoms> atoms {Oatom, Hatom1, Hatom2};
 
         sys.molecules.push_back({atoms, waterbonds, waterangle});
     }
-    
     // Store atoms, bonds and angles in Water class and return
     return sys;
 }
@@ -338,12 +341,14 @@ System MakeWater(int N_molecules){
 // Write the system configurations in the trajectory file.
 void WriteOutput(System& sys, std::ofstream& file){  
     // Loop over all atoms in model one molecule at a time and write out position
-    for (Molecule& molecule : sys.molecules)
-    for (auto& atom : molecule.atoms){
+    //for (Molecule& molecule : sys.molecules)
+    Molecules& molecule = sys.molecules;
+    for (auto& atom : molecule.atoms)
+    for(int i = 0; i<molecule.no_mol;i++){
         file << sys.time << " " << atom.name << " " 
-            << atom.p.x << " " 
-            << atom.p.y << " " 
-            << atom.p.z << '\n';
+            << atom.p[i].x << " " 
+            << atom.p[i].y << " " 
+            << atom.p[i].z << '\n';
     }
 }
 
