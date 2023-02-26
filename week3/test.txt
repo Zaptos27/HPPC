@@ -1,0 +1,626 @@
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.339
+task time [mus]   :     1423
+test 1, on file mpi_v1.out
+test 2, on file mpi_v1.out
+test 4, on file mpi_v1.out
+test 8, on file mpi_v1.out
+test 12, on file mpi_v1.out
+test 16, on file mpi_v1.out
+test 24, on file mpi_v1.out
+test 32, on file mpi_v1.out
+test 40, on file mpi_v1.out
+test 48, on file mpi_v1.out
+test 56, on file mpi_v1.out
+test 64, on file mpi_v1.out
+test 1, on file mpi_v2.out
+test 2, on file mpi_v2.out
+test 4, on file mpi_v2.out
+test 8, on file mpi_v2.out
+test 12, on file mpi_v2.out
+test 16, on file mpi_v2.out
+test 24, on file mpi_v2.out
+test 32, on file mpi_v2.out
+test 40, on file mpi_v2.out
+test 48, on file mpi_v2.out
+test 56, on file mpi_v2.out
+test 64, on file mpi_v2.out
+test 1, on file mpi_v3.out
+test 2, on file mpi_v3.out
+test 4, on file mpi_v3.out
+test 8, on file mpi_v3.out
+test 12, on file mpi_v3.out
+test 16, on file mpi_v3.out
+test 24, on file mpi_v3.out
+test 32, on file mpi_v3.out
+test 40, on file mpi_v3.out
+test 48, on file mpi_v3.out
+test 56, on file mpi_v3.out
+test 64, on file mpi_v3.out
+test 2, on file mpi_v1.out
+2 total processes failed to start
+test 4, on file mpi_v1.out
+4 total processes failed to start
+test 8, on file mpi_v1.out
+4 total processes failed to start
+test 12, on file mpi_v1.out
+4 total processes failed to start
+test 16, on file mpi_v1.out
+4 total processes failed to start
+test 24, on file mpi_v1.out
+4 total processes failed to start
+test 32, on file mpi_v1.out
+4 total processes failed to start
+test 40, on file mpi_v1.out
+4 total processes failed to start
+test 48, on file mpi_v1.out
+4 total processes failed to start
+test 56, on file mpi_v1.out
+4 total processes failed to start
+test 64, on file mpi_v1.out
+4 total processes failed to start
+test 2, on file mpi_v2.out
+2 total processes failed to start
+test 4, on file mpi_v2.out
+4 total processes failed to start
+test 8, on file mpi_v2.out
+4 total processes failed to start
+test 12, on file mpi_v2.out
+4 total processes failed to start
+test 16, on file mpi_v2.out
+4 total processes failed to start
+test 24, on file mpi_v2.out
+4 total processes failed to start
+test 32, on file mpi_v2.out
+4 total processes failed to start
+test 40, on file mpi_v2.out
+4 total processes failed to start
+test 48, on file mpi_v2.out
+4 total processes failed to start
+test 56, on file mpi_v2.out
+4 total processes failed to start
+test 64, on file mpi_v2.out
+4 total processes failed to start
+test 2, on file mpi_v3.out
+2 total processes failed to start
+test 4, on file mpi_v3.out
+4 total processes failed to start
+test 8, on file mpi_v3.out
+4 total processes failed to start
+test 12, on file mpi_v3.out
+4 total processes failed to start
+test 16, on file mpi_v3.out
+4 total processes failed to start
+test 24, on file mpi_v3.out
+4 total processes failed to start
+test 32, on file mpi_v3.out
+4 total processes failed to start
+test 40, on file mpi_v3.out
+4 total processes failed to start
+test 48, on file mpi_v3.out
+4 total processes failed to start
+test 56, on file mpi_v3.out
+4 total processes failed to start
+test 64, on file mpi_v3.out
+4 total processes failed to start
+test 1, on file seq
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :     20.4
+task time [mus]   :     3110
+test 2, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    23.32
+task time [mus]   :     3555
+test 4, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.353
+task time [mus]   :     1426
+test 8, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    11.97
+task time [mus]   :     1825
+test 12, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    10.24
+task time [mus]   :     1561
+test 16, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.391
+task time [mus]   :     1431
+test 24, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.183
+task time [mus]   :     1400
+test 32, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    8.703
+task time [mus]   :     1327
+test 40, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    10.04
+task time [mus]   :     1530
+test 48, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.277
+task time [mus]   :     1414
+test 56, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.357
+task time [mus]   :     1426
+test 64, on file test1.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.073
+task time [mus]   :     1383
+test 2, on file test3.out
+Best accuracy obtained :0.734479
+Final cuts :
+averageInteractionsPerCrossing : 38.9249
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    21.55
+task time [mus]   :     3284
+test 4, on file test3.out
+Best accuracy obtained :0.734479
+Final cuts :
+averageInteractionsPerCrossing : 38.9249
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :     9.36
+task time [mus]   :     1427
+test 8, on file test3.out
+Best accuracy obtained :0.735459
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    9.204
+task time [mus]   :     1403
+test 12, on file test3.out
+Best accuracy obtained :0.735411
+Final cuts :
+averageInteractionsPerCrossing : 43.8282
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :      9.2
+task time [mus]   :     1402
+test 16, on file test3.out
+Best accuracy obtained :0.735411
+Final cuts :
+averageInteractionsPerCrossing : 43.8282
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :     9.29
+task time [mus]   :     1416
+test 24, on file test3.out
+Best accuracy obtained :0.735391
+Final cuts :
+averageInteractionsPerCrossing : 38.9249
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    9.356
+task time [mus]   :     1426
+test 32, on file test3.out
+Best accuracy obtained :0.734479
+Final cuts :
+averageInteractionsPerCrossing : 38.9249
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    9.398
+task time [mus]   :     1432
+test 40, on file test3.out
+Best accuracy obtained :0.734479
+Final cuts :
+averageInteractionsPerCrossing : 38.9249
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    9.402
+task time [mus]   :     1433
+test 48, on file test3.out
+Best accuracy obtained :0.735411
+Final cuts :
+averageInteractionsPerCrossing : 43.8282
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :     9.48
+task time [mus]   :     1445
+test 56, on file test3.out
+Best accuracy obtained :0.734479
+Final cuts :
+averageInteractionsPerCrossing : 38.9249
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    9.354
+task time [mus]   :     1426
+test 64, on file test3.out
+Best accuracy obtained :0.735459
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.00677551
+                       p_Rhad1 : 0.00507775
+           p_TRTTrackOccupancy : 0.418749
+                p_topoetcone40 : 1.9553
+            p_eTileGap3Cluster : 0.867498
+                  p_phiModCalo : -1.10297e-05
+                  p_etaModCalo : 0.0124596
+
+Number of settings:     6561
+Elapsed time      :    9.357
+task time [mus]   :     1426
+test 2, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    21.07
+task time [mus]   :     3211
+test 4, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :     9.83
+task time [mus]   :     1498
+test 8, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.237
+task time [mus]   :     1408
+test 12, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.168
+task time [mus]   :     1397
+test 16, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.115
+task time [mus]   :     1389
+test 24, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.216
+task time [mus]   :     1405
+test 32, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.248
+task time [mus]   :     1410
+test 40, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.863
+task time [mus]   :     1503
+test 48, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.186
+task time [mus]   :     1400
+test 56, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    9.725
+task time [mus]   :     1482
+test 64, on file test4.out
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    10.63
+task time [mus]   :     1620
