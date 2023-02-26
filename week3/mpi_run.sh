@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+#SBATCH --job-name=HPPC_Group_1_code
+#SBATCH --partition=modi_devel
+#SBATCH --nodes=1
+#SBATCH --ntasks=64
+#SBATCH --exclusive
 
 echo "test 1, on file seq" >> test.txt
 mpirun test2.out >> test.txt
