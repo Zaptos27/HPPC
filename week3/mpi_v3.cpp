@@ -9,7 +9,7 @@
 #include <mpi.h>
 
 const int MAX_TASKS=5000;  // number of tasks
-const int NO_MORE_TASKS = MAX_TASKS+1
+const int NO_MORE_TASKS = MAX_TASKS+1;
 const int RANDOM_SEED=1234;
 
 void master(int workers);
@@ -38,7 +38,7 @@ void master(int workers)
   
   int i, tag, who;
     MPI_Status status;
-    std::array<int, NTASKS> temp, task, result;
+    std::array<int, MAX_TASKS> temp, task, result;
 
     // set up a random number generator
     std::random_device rd;
@@ -87,12 +87,12 @@ void master(int workers)
   MPI_Waitall(workers, request , MPI_STATUS_IGNORE);
   for (int worker=1; worker<=workers; worker++) {
         int tasksdone = 0; int workdone = 0;
-        for (int itask=0; itask<NTASKS; itask++)
+        for (int itask=0; itask<MAX_TASKS; itask++)
         if (result[itask]==worker) {
             tasksdone++;
             workdone += task[itask];
         }
-        printf("Master: Worker %d , solved %d tasks\n", worker, tasksdone)
+        printf("Master: Worker %d , solved %d tasks\n", worker, tasksdone);
     }
 }
 
