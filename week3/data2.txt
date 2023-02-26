@@ -1,0 +1,91 @@
+Core 1, on file seq
+[1677416955.027274] [modi004:100258:0]         ib_mlx5.c:90   UCX  ERROR mlx5dv_create_cq(cqe=1024) failed: Cannot allocate memory
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    17.42
+task time [mus]   :     2655
+[1677416974.745094] [modi004:100310:0]         ib_mlx5.c:90   UCX  ERROR mlx5dv_create_cq(cqe=1024) failed: Cannot allocate memory
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    17.45
+task time [mus]   :     2660
+[1677416994.481339] [modi004:100360:0]         ib_mlx5.c:90   UCX  ERROR mlx5dv_create_cq(cqe=1024) failed: Cannot allocate memory
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :     17.4
+task time [mus]   :     2652
+[1677417014.037646] [modi004:100417:0]         ib_mlx5.c:90   UCX  ERROR mlx5dv_create_cq(cqe=1024) failed: Cannot allocate memory
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    17.41
+task time [mus]   :     2654
+[1677417033.726692] [modi004:100465:0]         ib_mlx5.c:90   UCX  ERROR mlx5dv_create_cq(cqe=1024) failed: Cannot allocate memory
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    17.42
+task time [mus]   :     2655
+[1677417053.316708] [modi004:100516:0]         ib_mlx5.c:90   UCX  ERROR mlx5dv_create_cq(cqe=1024) failed: Cannot allocate memory
+Best accuracy obtained :0.736576
+Final cuts :
+averageInteractionsPerCrossing : 41.3766
+                        p_Rhad : 0.05993
+                       p_Rhad1 : 0.0377865
+           p_TRTTrackOccupancy : 0.468433
+                p_topoetcone40 : 4.96027
+            p_eTileGap3Cluster : 0.391874
+                  p_phiModCalo : 1.51578e-05
+                  p_etaModCalo : 0.0125259
+
+Number of settings:     6561
+Elapsed time      :    17.41
+task time [mus]   :     2654
