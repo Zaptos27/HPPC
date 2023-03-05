@@ -9,8 +9,8 @@
 export OMP_SCHEDULE=static
 
 # Schedule one thread per core. Change to "threads" for hyperthreading
-export OMP_PLACES=cores
-#export OMP_PLACES=threads
+#export OMP_PLACES=cores
+export OMP_PLACES=threads
 
 # Place threads as close to each other as possible
 export OMP_PROC_BIND=close
@@ -22,10 +22,12 @@ singularity exec ~/modi_images/hpc-notebook-latest.sif ./seq.out >> data.txt
 
 for i in 1 2 4 8 12 16 24 32 40 48 56 64
     do
-        echo "Core $i" >> data.txt
+        echo "Core $i, 1" >> data.txt
         export OMP_NUM_THREADS=$i
         echo Number of threads=$OMP_NUM_THREADS
         singularity exec ~/modi_images/hpc-notebook-latest.sif ./mpjonas.out >> data.txt
+        echo "Core $i, 2" >> data.txt
+        singularity exec ~/modi_images/hpc-notebook-latest.sif ./mp.out >> data.txt
     done
 
 # uncomment to write info about binding and environment variables to screen

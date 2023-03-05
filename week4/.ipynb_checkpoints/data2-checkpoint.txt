@@ -1,0 +1,7 @@
+Core 1, seq
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    5.693
+Elapsed time:    54.53
+Checksum    :    23.2912760166628
+Core 1
