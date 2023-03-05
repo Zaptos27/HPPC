@@ -1,0 +1,78 @@
+Core 1, seq
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    5.693
+Elapsed time:    54.53
+Checksum    :    23.2912760166628
+Core 1
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    6.415
+Elapsed time:     54.4
+Checksum    :    23.2912760166628
+Core 2
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    5.348
+Elapsed time:     30.1
+Checksum    :    23.2912760166628
+Core 4
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    2.998
+Elapsed time:    15.43
+Checksum    :    23.2912760166628
+Core 8
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    2.214
+Elapsed time:    9.738
+Checksum    :    23.2912760166628
+Core 12
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    2.185
+Elapsed time:    7.281
+Checksum    :    23.2912760166628
+Core 16
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    2.411
+Elapsed time:     6.23
+Checksum    :    23.2912760166628
+Core 24
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    3.012
+Elapsed time:    5.641
+Checksum    :    23.2912760166628
+Core 32
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    3.253
+Elapsed time:    5.255
+Checksum    :    23.2912760166628
+Core 40
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    3.559
+Elapsed time:    5.204
+Checksum    :    23.2912760166628
+Core 48
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    3.382
+Elapsed time:    4.782
+Checksum    :    23.2912760166628
+Core 56
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    3.587
+Elapsed time:     4.77
+Checksum    :    23.2912760166628
+Core 64
+Wave zero-point        : -2.9974e-10
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :    3.655
+Elapsed time:    4.745
+Checksum    :    23.2912760166628
