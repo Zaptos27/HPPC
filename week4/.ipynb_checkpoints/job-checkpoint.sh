@@ -16,10 +16,19 @@ export OMP_PLACES=threads
 export OMP_PROC_BIND=close
 
 # Set and print number of cores / threads to use
-export OMP_NUM_THREADS=64
-echo Number of threads=$OMP_NUM_THREADS
+
+echo "Core 1, seq" >> data.txt
+singularity exec ~/modi_images/hpc-notebook-latest.sif ./seq.out >> data.txt
+
+for i in 1 2 4 8 12 16 24 32 40 48 56 64
+    do
+        echo "Core $i, 1" >> data.txt
+        export OMP_NUM_THREADS=$i
+        echo Number of threads=$OMP_NUM_THREADS
+        singularity exec ~/modi_images/hpc-notebook-latest.sif ./mpjonas.out >> data.txt
+        echo "Core $i, 2" >> data.txt
+        singularity exec ~/modi_images/hpc-notebook-latest.sif ./mp.out >> data.txt
+    done
 
 # uncomment to write info about binding and environment variables to screen
 #export OMP_DISPLAY_ENV=true
-echo "Core $OMP_NUM_THREADS" >> dataweak.txt
-singularity exec ~/modi_images/hpc-notebook-latest.sif ./mpjonas.out >> dataweak.txt
