@@ -53,8 +53,11 @@ void fft(std::vector<Complex>& x)
 	}
 
 	// conquer
+    #pragma omp task shared(even) mergeable final(N < 100)
 	fft(even);
+    #pragma omp task shared(odd) mergeable final(N < 100)
 	fft(odd);
+    #pragma omp taskwait 
 
 	// combine
 	for (long k = 0; k < N/2; k++)
@@ -70,7 +73,11 @@ void ifft(std::vector<Complex>& x)
 {
     double inv_size = 1.0 / x.size();
     for (auto& xx: x) xx = std::conj(xx); // conjugate the input
-	fft(x);  	   // forward fft
+    #pragma omp parallel
+    {
+        #pragma omp single
+        fft(x);  	   // forward fft
+    }
     for (auto& xx: x) 
         xx = std::conj(xx)  // conjugate the output
             * inv_size;     // scale the numbers
@@ -97,7 +104,7 @@ std::vector<double> propagator(std::vector<double> wave,
     std::chrono::time_point<std::chrono::system_clock> tstart1,tstart2,tend1,tend2;
     #pragma omp parallel
     {
-    #pragma omp single nowait
+    #pragma omp single
     {
     #pragma omp task
     {
@@ -121,7 +128,11 @@ std::vector<double> propagator(std::vector<double> wave,
     // Fourier transform waveform to frequency domain
     tstart1 = std::chrono::high_resolution_clock::now(); // start time (nano-seconds)
     // check if fft can optimise prob can't because of reference
-    fft(wave_spectral);
+    #pragma omp parallel
+    {
+        #pragma omp single
+        fft(wave_spectral);
+    }
     tend1 = std::chrono::high_resolution_clock::now(); // end time (nano-seconds)
     }
     #pragma omp task
