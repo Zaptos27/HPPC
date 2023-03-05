@@ -16,13 +16,16 @@ OPT=-O3 -ffast-math
 
 CXXFLAGS := $(OPT) -Wall -march=native -g -std=c++14
 
-default: seq mp
+default: seq mp mp1
 
 seq: seismogram_seq.cpp
-	$(CXX) seismogram_seq.cpp $(CXXFLAGS) -o seq
+	$(CXX) seismogram_seq.cpp $(CXXFLAGS) -o seq.out
 
 mp: seismogram_omp.cpp
-	$(CXX) seismogram_omp.cpp $(CXXFLAGS) -fopenmp -o mp
+	$(CXX) seismogram_omp.cpp $(CXXFLAGS) -fopenmp -o mp.out
+
+mp1: seismogram_omp1.cpp
+	$(CXX) seismogram_omp1.cpp $(CXXFLAGS) -fopenmp -o mp1.out
 
 clean:
-	rm -fr seq mp
+	rm -fr seq.out mp.out mp1.out
