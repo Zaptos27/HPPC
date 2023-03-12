@@ -9,7 +9,7 @@
 #include <algorithm>
 
 using real_t = float;
-constexpr size_t NX = 10*512, NY = 10*512; //World Size
+constexpr size_t NX = 512, NY = 512; //World Size
 using grid_t = std::array<std::array<real_t, NX>, NY>;
 
 class Sim_Configuration {
@@ -20,7 +20,7 @@ public:
     real_t dx = 1;          // Integration step size in the horizontal direction
     real_t dy = 1;          // Integration step size in the vertical direction
     int data_period = 100;  // how often to save coordinate to file
-    std::string filename = "sw_seq_output.data";   // name of the output file with history
+    std::string filename = "sw_output.data";   // name of the output file with history
 
     Sim_Configuration(std::vector <std::string> argument){
         for (long unsigned int i = 1; i<argument.size() ; i += 2){
@@ -152,8 +152,9 @@ void simulate(const Sim_Configuration config) {
         }
     }
     auto end = std::chrono::steady_clock::now();
-    
+
     to_file(water_history, config.filename);
+
     std::cout << "checksum: " << std::accumulate(water_world.e.front().begin(), water_world.e.back().end(), 0.0) << std::endl;
     std::cout << "elapsed time: " << (end - begin).count() / 1000000000.0 << " sec" << std::endl;
 }

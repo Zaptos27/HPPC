@@ -39,6 +39,6 @@
 *.mp4
 *.npy
 *.npz
-
+*.data
 
 
