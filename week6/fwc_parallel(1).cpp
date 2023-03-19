@@ -1,3 +1,6 @@
+   
+//mpiexec -np 2 ./fwc_parallel --iter 100 --model models/small.hdf5 --out seq.hdf5
+
 #include <vector>
 #include <iostream>
 #include <H5Cpp.h>
@@ -11,6 +14,8 @@ int mpi_size;
 
 // Get the rank of the process
 int mpi_rank;
+
+
 
 /** Representation of a flat world */
 class World {
@@ -27,7 +32,7 @@ public:
     long int offset_longitude;
     // The temperature of each coordinate of the world.
     // NB: it is up to the calculation to interpret this vector in two dimension.
-    std::vector<double> data;
+    std::vector<double> data; // THIS IS THE TEMPERATURE
     // The measure of the diffuse reflection of solar radiation at each world coordinate.
     // See: <https://en.wikipedia.org/wiki/Albedo>
     // NB: this vector has the same length as `data` and must be interpreted in two dimension as well.
@@ -50,17 +55,28 @@ public:
 double checksum(World &world) {
     // 
     double cs=0;
-    // TODO: make sure checksum is computed globally !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TODO: make sure checksum is computed globally
     // only loop *inside* data region -- not in ghostzones!
     for (uint64_t i = 1; i < world.latitude - 1; ++i)
     for (uint64_t j = 1; j < world.longitude - 1; ++j) {
         cs += world.data[i*world.longitude + j];
     }
-    return cs;
+    
+    double my_cs[mpi_size];
+    MPI_Gather(&cs, 1, MPI_DOUBLE, &my_cs, 1, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    if (mpi_rank == 0) {
+        for (int i = 1; i < mpi_size; i++) {
+            cs += my_cs[i];
+            }
+        return cs;
+    }
+    else {
+        return true;
+    }
 }
 
 void stat(World &world) {
-    // TODO: make sure stats are computed globally !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TODO: make sure stats are computed globally
     double mint = 1e99;
     double maxt = 0;
     double meant = 0;
@@ -70,71 +86,67 @@ void stat(World &world) {
         maxt = std::max(maxt,world.data[i*world.longitude + j]);
         meant += world.data[i*world.longitude + j];
     }
-    meant = meant / (world.global_latitude * world.global_longitude);
+    //MY_comment; ya, had to redefine them for some reason
+    uint64_t global_latitude = world.latitude - 2;
+    uint64_t global_longitude = world.longitude - 2;
+    meant = meant / (global_latitude * global_longitude);
     std::cout <<   "min: " << mint
-              << ", max: " << maxt
-              << ", avg: " << meant << std::endl;
+          << ", max: " << maxt
+          << ", avg: " << meant << std::endl;
+    
 }
 
 /** Exchange the ghost cells i.e. copy the second data row and column to the very last data row and column and vice versa.
  *
  * @param world  The world to fix the boundaries for.
  */
-void exchange_ghost_cells(World &world,std::array<int,4> &neight) {
+void exchange_ghost_cells(World &world) {
     // TODO: figure out exchange of ghost cells bewteen ranks
-
-    // MAKE MPI SYSTEM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    std::vector<double> toright(world.latitude);
-    std::vector<double> toleft(world.latitude);
-    std::vector<double> toup(world.latitude);
-    std::vector<double> todown(world.latitude);
-
+    
     std::vector<double> fromright(world.latitude);
     std::vector<double> fromleft(world.latitude);
-    std::vector<double> fromup(world.longitude);
-    std::vector<double> todown(world.longitude);
-
-    for(uint64_t i = 0; i < world.latitude; ++i) {
-        toright[i] = world.data[i*world.longitude + world.longitude-2];
-        toleft[i]  = world.data[i*world.longitude + 1];
+    for (uint64_t i = 0; i < world.latitude; ++i) {
+        fromright[i] = world.data[i*world.longitude + world.longitude-2];
+        fromleft[i] = world.data[i*world.longitude + 1];
     }
-    for (uint64_t j = 0; j < world.longitude; ++j) {
-        toup[i]    =  world.data[1*world.longitude + j];
-        todown[i]  =  world.data[(world.latitude-2)*world.longitude + j];
+    
+    std::vector<int> neighbour;
+    neighbour.push_back(mpi_size -1);
+    for (int i = 0; i < mpi_size; i++) {
+        neighbour.push_back(i);
     }
-
-    MPI_Request request[8];
-
-    MPI_Irecv(&fromright.front(), world.latitude, MPI_DOUBLE , neight[3] , 3, MPI_COMM_WORLD , &request[3]);
-    MPI_Irecv(&fromleft.front(), world.latitude, MPI_DOUBLE , neight[2] , 2, MPI_COMM_WORLD , &request[2]);
-    MPI_Irecv(&fromdown.front(), world.longitude, MPI_DOUBLE , neight[1] , 1, MPI_COMM_WORLD , &request[1]);
-    MPI_Irecv(&fromup.front(), world.longitude, MPI_DOUBLE , neight[0] , 0, MPI_COMM_WORLD , &request[0]);
-
-    MPI_Isend(&toright.front(), world.latitude, MPI_DOUBLE , neight[3] , 3, MPI_COMM_WORLD , &request[7]);
-    MPI_Isend(&toleft.front(), world.latitude, MPI_DOUBLE , neight[2] , 2, MPI_COMM_WORLD , &request[6]);
-    MPI_Isend(&todown.front(), world.longitude, MPI_DOUBLE , neight[1] , 1, MPI_COMM_WORLD , &request[5]);
-    MPI_Isend(&toup.front(), world.longitude, MPI_DOUBLE , neight[0] , 0, MPI_COMM_WORLD , &request[4]);
-
-    MPI_Waitall(8, request, MPI_STATUS_IGNORE);
-
+    neighbour.push_back(0);
+    
+    std::vector<double> toright(world.latitude);
+    std::vector<double> toleft(world.latitude);
+    
+    MPI_Status status;
+    //left neighbour
+    MPI_Send(&fromleft.front(), world.latitude, MPI_DOUBLE, neighbour[mpi_rank], neighbour[mpi_rank], MPI_COMM_WORLD);
+    MPI_Recv(&toright.front(), world.latitude, MPI_DOUBLE, neighbour[mpi_rank + 2], mpi_rank, MPI_COMM_WORLD, &status);
+    
+    //right neighbour
+    MPI_Send(&fromright.front(), world.latitude, MPI_DOUBLE, neighbour[mpi_rank + 2], neighbour[mpi_rank + 2], MPI_COMM_WORLD);
+    MPI_Recv(&toleft.front(), world.latitude, MPI_DOUBLE, neighbour[mpi_rank], mpi_rank, MPI_COMM_WORLD, &status);
+    
     
     for (uint64_t i = 0; i < world.latitude; ++i) {
-        world.data[i*world.longitude + 0] = fromright[i];
-        world.data[i*world.longitude + world.longitude-1] = fromleft[i];
+        world.data[i*world.longitude + 0] = toleft[i];
+        world.data[i*world.longitude + world.longitude-1] = toright[i];
     }
-
+    
     for (uint64_t j = 0; j < world.longitude; ++j) {
-        world.data[0*world.longitude + j] = fromdown[i];
-        world.data[(world.latitude-1)*world.longitude + j] = fromup[i];
+        world.data[0*world.longitude + j] = world.data[(world.latitude-2)*world.longitude + j];
+        world.data[(world.latitude-1)*world.longitude + j] = world.data[1*world.longitude + j];
     }
+    
 }
 
 /** Warm the world based on the position of the sun.
  *
  * @param world      The world to warm.
  */
-void radiation(World& world,std::array<int,4> &neight) {
+void radiation(World& world) {
     double sun_angle = std::cos(world.time);
     double sun_intensity = 865.0;
     double sun_long = (std::sin(sun_angle) * (world.global_longitude / 2))
@@ -155,7 +167,7 @@ void radiation(World& world,std::array<int,4> &neight) {
                 (sun_intensity / dist) * (1. - world.albedo_data[i * world.longitude + j]);
         }
     }
-    exchange_ghost_cells(world,neight);
+    exchange_ghost_cells(world);
 }
 
 /** Heat radiated to space
@@ -172,7 +184,7 @@ void energy_emmision(World& world) {
  *
  * @param world  The world to update.
  */
-void diffuse(World& world,std::array<int,4> &neight) {
+void diffuse(World& world) {
     std::vector<double> tmp = world.data;
     for (uint64_t k = 0; k < 10; ++k) {
         for (uint64_t i = 1; i < world.latitude - 1; ++i) {
@@ -187,7 +199,7 @@ void diffuse(World& world,std::array<int,4> &neight) {
             }
         }
         std::swap(world.data, tmp);  // swap pointers for the two arrays
-        exchange_ghost_cells(world,neight); // update ghost zones
+        exchange_ghost_cells(world); // update ghost zones
     }
 }
 
@@ -195,10 +207,10 @@ void diffuse(World& world,std::array<int,4> &neight) {
  *
  * @param world      The world to update.
  */
-void integrate(World& world,std::array<int,4> &neight) {
-    radiation(world,neight);
+void integrate(World& world) {
+    radiation(world);
     energy_emmision(world);
-    diffuse(world,neight);
+    diffuse(world);
 }
 
 /** Read a world model from a HDF5 file
@@ -262,55 +274,18 @@ void write_hdf5(const World& world, const std::string& filename, uint64_t iterat
  * @param output_filename    The filename of the written world history (HDF5 file)
  */
 void simulate(uint64_t num_of_iterations, const std::string& model_filename, const std::string& output_filename) {
-
     // for simplicity, read in full model
     World global_world = read_world_model(model_filename);
-    //MAKE the ghost shells !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int grid_x = mpi_size;
-    int grid_y = 1;
-    if(mpi_size>3){
-        for(int i = 2; i<9; i++){
-            if(mpi_size%i==i){
-                grid_x,grid_y = i,i;
-                goto jmp; // YES I know shitty right
-            }
-        }
-        for(int i = 2; i<mpi_size-2;i++){
-            if((mpi_size)%i==0 && grid_x+grid_y>(int) (mpi_size)/i + i){
-                grid_x, grid_y = i, (int) (mpi_size)/i;
-            }
-        }
-    }
-    jmp: 
-
-    std::array<int,4> neight; // PLS MAKE STD ARRAY but not now but pls do
-    neight[0] = mpi_rank - grid_x;//UP
-    if(neight[0]<0){
-        neight[0] += mpi_size;
-    }
-    neight[1] = mpi_rank + grid_x;//DOWN
-    if(neight[0]>=mpi_size){
-        neight[0] -= mpi_size;
-    }
-    if(mpi_rank%grid_x==0){
-        neight[2] = mpi_rank + grid_x - 1;//left
-        neight[3] = mpi_rank + 1;//right
-    }elif(mpi_rank%grid_x==grid_x-1){
-        neight[2] = mpi_rank - 1;//left
-        neight[3] = mpi_rank - grid_x + 1;//right
-    }else{
-        neight[2] = mpi_rank - 1;//left
-        neight[3] = mpi_rank + 1;//right
-    }
-    
-    
     
     // TODO: compute offsets according to rank and domain decomposition
     // figure out size of domain for this rank
-    const long int offset_longitude = global_world.longitude / grid_x * mpi_rank -1; // -1 because first cell is a ghostcell
-    const long int offset_latitude  = global_world.latitude  / grid_y * mpi_rank -1;
-    const uint64_t longitude = global_world.longitude / grid_x + 2; // one ghost cell on each end
-    const uint64_t latitude  = global_world.latitude  / grid_y + 2;
+    //MY_comment: Telling where the specific domain is in the grid.
+    const long int offset_longitude = global_world.longitude / mpi_size * mpi_rank -1; // -1 because first cell is a ghostcell
+    const long int offset_latitude  = -1;
+    
+    //MY_comment: Creating the size of the local domain
+    const uint64_t longitude = global_world.longitude / mpi_size + 2; // one ghost cell on each end
+    const uint64_t latitude  = global_world.latitude + 2;
 
     // copy over albedo data to local world data
     std::vector<double> albedo(longitude*latitude);
@@ -327,36 +302,42 @@ void simulate(uint64_t num_of_iterations, const std::string& model_filename, con
     world.global_longitude = global_world.longitude;
     world.offset_latitude  = offset_latitude;
     world.offset_longitude = offset_longitude;
-
+    
     // set up counters and loop for num_iterations of integration steps
     const double delta_time = world.global_longitude / 36.0;
-
     auto begin = std::chrono::steady_clock::now();
     for (uint64_t iteration=0; iteration < num_of_iterations; ++iteration) {
-        world.time = iteration / delta_time;
-        integrate(world,neight);
-
-        // TODO: gather the Temperature on rank zero
-
-        // MAKE THE GATHER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if(mpi_rank==0){
-            std::vector<double> buffer(latitude*longitude)[mpi_size]
-            MPI_Gather(&send_world, longitude*latitude , MPI_DOUBLE ,buffer, longitude*latitude , MPI_DOUBLE , 0, MPI_COMM_WORLD);
-        }else{
-            MPI_Gather(&send_world, longitude*latitude , MPI_DOUBLE ,NULL, 0, MPI_DOUBLE , 0, MPI_COMM_WORLD);
-        }
-
+        world.time = iteration / delta_time;    
+        integrate(world);
+        
+        //TODO: gather the Temperature on rank zero //std::vector<double> data from class World is the temperature.  
         // remove ghostzones and construct global data from local data
-        if(mpi_rank==0){
-        for (int k = 0; k<buffer.size();k++){
         for (uint64_t i = 1; i < latitude-1; ++i)
         for (uint64_t j = 1; j < longitude-1; ++j) {
-            uint64_t k_global = (i + offset_latitude * k/grid_x) * global_world.longitude
-                              + (j + offset_longitude * k%grid_x);
-            global_world.data[k_global] = buffer[k].data[i * longitude + j];
+            uint64_t k_global = (i + offset_latitude) * global_world.longitude
+                              + (j + offset_longitude);
+            global_world.data[k_global] = world.data[i * longitude + j];
         }
+        
+        
+        std::vector<double> local_data(global_world.latitude * global_world.longitude / mpi_size);
+        for (uint64_t i = 0; i < global_world.latitude; ++i )
+        for (uint64_t j = 0; j < global_world.longitude / mpi_size; ++j ) {
+            local_data[i*global_world.longitude / mpi_size + j] = global_world.data[i*global_world.longitude + j + global_world.longitude / mpi_size * mpi_rank];
         }
+        
+        std::vector<double> my_global_data(global_world.latitude * global_world.longitude);
+        
+        MPI_Gather(&local_data.front(), local_data.size(), MPI_DOUBLE, &my_global_data.front(), 
+           local_data.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+        
+        for (uint64_t i = 0; i < global_world.latitude; ++i )
+        for (int k = 0; k < mpi_size; ++k )
+        for (uint64_t j = 0; j < global_world.longitude / mpi_size; ++j ) {
+            global_world.data[i * global_world.longitude + k * global_world.longitude / mpi_size + j] = 
+                my_global_data[i * global_world.longitude / mpi_size + k * global_world.latitude * global_world.longitude / mpi_size + j];
         }
+        
         if (!output_filename.empty()) {
             // Only rank zero writes water history to file
             if (mpi_rank == 0) {
@@ -367,10 +348,8 @@ void simulate(uint64_t num_of_iterations, const std::string& model_filename, con
         }
     }
     auto end = std::chrono::steady_clock::now();
-    if(mpi_rank==0){
-        std::cout << "checksum      : " << checksum(global_world) << std::endl; // I don't see why not
-        std::cout << "elapsed time  : " << (end - begin).count() / 1000000000.0 << " sec" << std::endl;
-    }
+    std::cout << "checksum for rank " << mpi_rank << " : " << checksum(world) << std::endl;
+    std::cout << "elapsed time for rank "<< mpi_rank << " : " << (end - begin).count() / 1000000000.0 << " sec" << std::endl;
 }
 
 /** Main function that parses the command line and start the simulation */
@@ -399,7 +378,7 @@ int main(int argc, char **argv) {
     std::string output_filename;
 
     std::vector <std::string> argument({argv, argv+argc});
-
+    
     for (long unsigned int i = 1; i<argument.size() ; i += 2){
         std::string arg = argument[i];
         if(arg=="-h"){ // Write help
@@ -426,9 +405,31 @@ int main(int argc, char **argv) {
     if (iterations==0)
         throw std::invalid_argument("You must specify the number of iterations "
                                     "(e.g. --iter 10)");
-
+    
     simulate(iterations, model_filename, output_filename);
+    
+    /*
+    //MY_comment: A small test that shows how MPI_Gather works for vector<double>
+    int n = 30;
+    std::vector<double> test1 = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0 ,8.0 ,9.0, 10};
+    std::vector<double> new_test(n);
+    std::vector<double> test2(10);
+    
 
+    //auto start = test1.begin() + 5;
+    //auto end = test1.begin() + 10;
+    //std::vector<double> vec(start, end);
+    
+    MPI_Gather(&test2.front(), 10, MPI_DOUBLE, &new_test.front(), 10, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+    
+    if (mpi_rank == 0) {
+        for (int i = 0; i < n; i++) {
+            std::cout << new_test[i] << "\n";
+            }
+    }
+    */ 
+    
+    
     MPI_Finalize();
 
     return 0;
