@@ -21,5 +21,5 @@ echo Number of threads=$OMP_NUM_THREADS
 
 # uncomment to write info about binding and environment variables to screen
 #export OMP_DISPLAY_ENV=true
-echo "Core $OMP_NUM_THREADS" >> dataweak.txt
-singularity exec ~/modi_images/hpc-notebook-latest.sif ./mpjonas.out >> dataweak.txt
+echo "Core seq" >> dataweak2.txt
+singularity exec ~/modi_images/hpc-notebook-latest.sif ./mp.out >> dataweak2.txt

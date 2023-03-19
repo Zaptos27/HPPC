@@ -40,3 +40,15 @@ Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
 Elapsed time for FFTs  :    3.703
 Elapsed time:      4.8
 Checksum    :    23.2912760166628
+Core seq
+Wave zero-point        : -1.9183e-08
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :  0.08933
+Elapsed time:   0.8619
+Checksum    :    23.2912755963294
+Core seq
+Wave zero-point        : -1.9183e-08
+Seismogram first coeff : -0.014087, -0.017407, -0.019272, -0.019317
+Elapsed time for FFTs  :  0.09508
+Elapsed time:   0.8667
+Checksum    :    23.2912755963294
