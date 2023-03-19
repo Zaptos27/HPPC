@@ -31,6 +31,9 @@
 *.out
 *.app
 
+#DATA
+*.hdf5
+
 
 # Other files from python
 *.eps

@@ -9,6 +9,9 @@
 // Get the number of processes
 int mpi_size;
 
+int nx, ny;
+int l_neighbor, r_neighbor, t_neighbor, b_neighbor;
+
 // Get the rank of the process
 int mpi_rank;
 
@@ -50,7 +53,7 @@ public:
 double checksum(World &world) {
     // 
     double cs=0;
-    // TODO: make sure checksum is computed globally !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TODO: make sure checksum is computed globally
     // only loop *inside* data region -- not in ghostzones!
     for (uint64_t i = 1; i < world.latitude - 1; ++i)
     for (uint64_t j = 1; j < world.longitude - 1; ++j) {
@@ -60,7 +63,7 @@ double checksum(World &world) {
 }
 
 void stat(World &world) {
-    // TODO: make sure stats are computed globally !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TODO: make sure stats are computed globally
     double mint = 1e99;
     double maxt = 0;
     double meant = 0;
@@ -70,7 +73,7 @@ void stat(World &world) {
         maxt = std::max(maxt,world.data[i*world.longitude + j]);
         meant += world.data[i*world.longitude + j];
     }
-    meant = meant / (world.global_latitude * world.global_longitude);
+    meant = meant / (world.latitude * world.longitude);
     std::cout <<   "min: " << mint
               << ", max: " << maxt
               << ", avg: " << meant << std::endl;
@@ -80,53 +83,49 @@ void stat(World &world) {
  *
  * @param world  The world to fix the boundaries for.
  */
-void exchange_ghost_cells(World &world,std::array<int,4> &neight) {
-    // TODO: figure out exchange of ghost cells bewteen ranks
-
-    // MAKE MPI SYSTEM HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-    std::vector<double> toright(world.latitude);
-    std::vector<double> toleft(world.latitude);
-    std::vector<double> toup(world.latitude);
-    std::vector<double> todown(world.latitude);
-
-    std::vector<double> fromright(world.latitude);
-    std::vector<double> fromleft(world.latitude);
-    std::vector<double> fromup(world.longitude);
-    std::vector<double> todown(world.longitude);
-
-    for(uint64_t i = 0; i < world.latitude; ++i) {
-        toright[i] = world.data[i*world.longitude + world.longitude-2];
-        toleft[i]  = world.data[i*world.longitude + 1];
-    }
-    for (uint64_t j = 0; j < world.longitude; ++j) {
-        toup[i]    =  world.data[1*world.longitude + j];
-        todown[i]  =  world.data[(world.latitude-2)*world.longitude + j];
-    }
-
-    MPI_Request request[8];
-
-    MPI_Irecv(&fromright.front(), world.latitude, MPI_DOUBLE , neight[3] , 3, MPI_COMM_WORLD , &request[3]);
-    MPI_Irecv(&fromleft.front(), world.latitude, MPI_DOUBLE , neight[2] , 2, MPI_COMM_WORLD , &request[2]);
-    MPI_Irecv(&fromdown.front(), world.longitude, MPI_DOUBLE , neight[1] , 1, MPI_COMM_WORLD , &request[1]);
-    MPI_Irecv(&fromup.front(), world.longitude, MPI_DOUBLE , neight[0] , 0, MPI_COMM_WORLD , &request[0]);
-
-    MPI_Isend(&toright.front(), world.latitude, MPI_DOUBLE , neight[3] , 3, MPI_COMM_WORLD , &request[7]);
-    MPI_Isend(&toleft.front(), world.latitude, MPI_DOUBLE , neight[2] , 2, MPI_COMM_WORLD , &request[6]);
-    MPI_Isend(&todown.front(), world.longitude, MPI_DOUBLE , neight[1] , 1, MPI_COMM_WORLD , &request[5]);
-    MPI_Isend(&toup.front(), world.longitude, MPI_DOUBLE , neight[0] , 0, MPI_COMM_WORLD , &request[4]);
-
-    MPI_Waitall(8, request, MPI_STATUS_IGNORE);
-
+void exchange_ghost_cells(World &world) {
+    
+    std::vector<double> left_line_send(world.latitude);
+    std::vector<double> right_line_send(world.latitude);
+    std::vector<double> top_line_send(world.longitude);
+    std::vector<double> bottom_line_send(world.longitude);
     
     for (uint64_t i = 0; i < world.latitude; ++i) {
-        world.data[i*world.longitude + 0] = fromright[i];
-        world.data[i*world.longitude + world.longitude-1] = fromleft[i];
+        left_line_send[i] = world.data[i*world.longitude + 1];
+        right_line_send[i] = world.data[i*world.longitude + world.longitude-2];
     }
-
     for (uint64_t j = 0; j < world.longitude; ++j) {
-        world.data[0*world.longitude + j] = fromdown[i];
-        world.data[(world.latitude-1)*world.longitude + j] = fromup[i];
+        top_line_send[j] = world.data[world.longitude + j];
+        bottom_line_send[j] = world.data[world.longitude*(world.latitude-2) + j];
+        }
+    
+    std::vector<double> left_line_recv(world.latitude);
+    std::vector<double> right_line_recv(world.latitude);
+    std::vector<double> top_line_recv(world.longitude);
+    std::vector<double> bottom_line_recv(world.longitude);
+        
+    
+    MPI_Request requests[8];
+    
+    MPI_Isend(&left_line_send[0], world.latitude, MPI_DOUBLE, l_neighbor, 1, MPI_COMM_WORLD, &requests[0]);
+    MPI_Irecv(&left_line_recv[0], world.latitude, MPI_DOUBLE, l_neighbor, 0, MPI_COMM_WORLD, &requests[1]);
+    MPI_Isend(&right_line_send[0], world.latitude, MPI_DOUBLE, r_neighbor, 0, MPI_COMM_WORLD, &requests[2]);
+    MPI_Irecv(&right_line_recv[0], world.latitude, MPI_DOUBLE, r_neighbor, 1, MPI_COMM_WORLD, &requests[3]);
+    MPI_Isend(&top_line_send[0], world.longitude, MPI_DOUBLE, t_neighbor, 2, MPI_COMM_WORLD, &requests[4]);
+    MPI_Irecv(&top_line_recv[0], world.longitude, MPI_DOUBLE, t_neighbor, 3, MPI_COMM_WORLD, &requests[5]);
+    MPI_Isend(&bottom_line_send[0], world.longitude, MPI_DOUBLE, b_neighbor, 3, MPI_COMM_WORLD, &requests[6]);
+    MPI_Irecv(&bottom_line_recv[0], world.longitude, MPI_DOUBLE, b_neighbor, 2, MPI_COMM_WORLD, &requests[7]);
+    
+    MPI_Waitall(8, requests, MPI_STATUSES_IGNORE);
+    
+    for (uint64_t i = 0; i < world.latitude; ++i) {
+        world.data[i*world.longitude + 0] = left_line_recv[i];
+        world.data[i*world.longitude + world.longitude-1] = right_line_recv[i];
+    }
+    
+    for (uint64_t j = 0; j < world.longitude; ++j) {
+        world.data[0*world.longitude + j] = top_line_recv[j];
+        world.data[(world.latitude-1)*world.longitude + j] = bottom_line_recv[j];
     }
 }
 
@@ -134,7 +133,7 @@ void exchange_ghost_cells(World &world,std::array<int,4> &neight) {
  *
  * @param world      The world to warm.
  */
-void radiation(World& world,std::array<int,4> &neight) {
+void radiation(World& world) {
     double sun_angle = std::cos(world.time);
     double sun_intensity = 865.0;
     double sun_long = (std::sin(sun_angle) * (world.global_longitude / 2))
@@ -155,7 +154,7 @@ void radiation(World& world,std::array<int,4> &neight) {
                 (sun_intensity / dist) * (1. - world.albedo_data[i * world.longitude + j]);
         }
     }
-    exchange_ghost_cells(world,neight);
+    exchange_ghost_cells(world);
 }
 
 /** Heat radiated to space
@@ -172,7 +171,7 @@ void energy_emmision(World& world) {
  *
  * @param world  The world to update.
  */
-void diffuse(World& world,std::array<int,4> &neight) {
+void diffuse(World& world) {
     std::vector<double> tmp = world.data;
     for (uint64_t k = 0; k < 10; ++k) {
         for (uint64_t i = 1; i < world.latitude - 1; ++i) {
@@ -187,7 +186,7 @@ void diffuse(World& world,std::array<int,4> &neight) {
             }
         }
         std::swap(world.data, tmp);  // swap pointers for the two arrays
-        exchange_ghost_cells(world,neight); // update ghost zones
+        exchange_ghost_cells(world); // update ghost zones
     }
 }
 
@@ -195,10 +194,10 @@ void diffuse(World& world,std::array<int,4> &neight) {
  *
  * @param world      The world to update.
  */
-void integrate(World& world,std::array<int,4> &neight) {
-    radiation(world,neight);
+void integrate(World& world) {
+    radiation(world);
     energy_emmision(world);
-    diffuse(world,neight);
+    diffuse(world);
 }
 
 /** Read a world model from a HDF5 file
@@ -223,8 +222,10 @@ World read_world_model(const std::string& filename) {
     dataspace.getSimpleExtentDims(dims, NULL);
     std::vector<double> data_out(dims[0] * dims[1]);
     dataset.read(data_out.data(), H5::PredType::NATIVE_DOUBLE, dataspace, dataspace);
+    if(mpi_rank == 0){
     std::cout << "World model loaded -- latitude: " << (unsigned long) (dims[0]) << ", longitude: "
               << (unsigned long) (dims[1]) << std::endl;
+    }
     return World(static_cast<uint64_t>(dims[0]), static_cast<uint64_t>(dims[1]), 293.15, std::move(data_out));
 }
 
@@ -265,54 +266,43 @@ void simulate(uint64_t num_of_iterations, const std::string& model_filename, con
 
     // for simplicity, read in full model
     World global_world = read_world_model(model_filename);
-    //MAKE the ghost shells !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int grid_x = mpi_size;
-    int grid_y = 1;
+    
+    nx = mpi_size;
+    ny = 1;
     if(mpi_size>3){
         for(int i = 2; i<9; i++){
-            if(mpi_size%i==i){
-                grid_x,grid_y = i,i;
+            if(mpi_size/i==i && global_world.longitude%i == 0 && global_world.latitude%i == 0){
+                nx = i;
+                ny = i;
                 goto jmp; // YES I know shitty right
             }
         }
         for(int i = 2; i<mpi_size-2;i++){
-            if((mpi_size)%i==0 && grid_x+grid_y>(int) (mpi_size)/i + i){
-                grid_x, grid_y = i, (int) (mpi_size)/i;
+            if((mpi_size)%i==0 && nx+ny>(int) (mpi_size)/i + i && global_world.longitude%i == 0 && global_world.latitude%((mpi_size)/i) == 0){
+                nx = i;
+                ny =(int) (mpi_size)/i;
             }
         }
     }
     jmp: 
-
-    std::array<int,4> neight; // PLS MAKE STD ARRAY but not now but pls do
-    neight[0] = mpi_rank - grid_x;//UP
-    if(neight[0]<0){
-        neight[0] += mpi_size;
-    }
-    neight[1] = mpi_rank + grid_x;//DOWN
-    if(neight[0]>=mpi_size){
-        neight[0] -= mpi_size;
-    }
-    if(mpi_rank%grid_x==0){
-        neight[2] = mpi_rank + grid_x - 1;//left
-        neight[3] = mpi_rank + 1;//right
-    }elif(mpi_rank%grid_x==grid_x-1){
-        neight[2] = mpi_rank - 1;//left
-        neight[3] = mpi_rank - grid_x + 1;//right
-    }else{
-        neight[2] = mpi_rank - 1;//left
-        neight[3] = mpi_rank + 1;//right
-    }
     
-    
+    int long_div = global_world.longitude / nx;
+    int lat_div = global_world.latitude / ny;
     
     // TODO: compute offsets according to rank and domain decomposition
     // figure out size of domain for this rank
-    const long int offset_longitude = global_world.longitude / grid_x * mpi_rank -1; // -1 because first cell is a ghostcell
-    const long int offset_latitude  = global_world.latitude  / grid_y * mpi_rank -1;
-    const uint64_t longitude = global_world.longitude / grid_x + 2; // one ghost cell on each end
-    const uint64_t latitude  = global_world.latitude  / grid_y + 2;
-
-    // copy over albedo data to local world data
+    const long int offset_longitude = long_div*(mpi_rank % nx) - 1; // -1 because first cell is a ghostcell
+    const long int offset_latitude  = lat_div*(mpi_rank / nx) - 1;
+    const uint64_t longitude = long_div + 2; // one ghost cell on each end
+    const uint64_t latitude  = lat_div + 2;
+    
+    l_neighbor = (mpi_rank + nx - 1) % nx + (mpi_rank / nx) * nx;
+    r_neighbor = (mpi_rank + 1) % nx + (mpi_rank / nx) * nx;
+    t_neighbor = ((mpi_rank / nx + ny - 1) % ny) * nx + mpi_rank % nx;
+    b_neighbor = ((mpi_rank / nx + 1) % ny) * nx + mpi_rank % nx;
+    
+    
+    
     std::vector<double> albedo(longitude*latitude);
     for (uint64_t i = 1; i < latitude-1; ++i)
     for (uint64_t j = 1; j < longitude-1; ++j) {
@@ -334,41 +324,64 @@ void simulate(uint64_t num_of_iterations, const std::string& model_filename, con
     auto begin = std::chrono::steady_clock::now();
     for (uint64_t iteration=0; iteration < num_of_iterations; ++iteration) {
         world.time = iteration / delta_time;
-        integrate(world,neight);
-
-        // TODO: gather the Temperature on rank zero
-
-        // MAKE THE GATHER !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        if(mpi_rank==0){
-            std::vector<double> buffer(latitude*longitude)[mpi_size]
-            MPI_Gather(&send_world, longitude*latitude , MPI_DOUBLE ,buffer, longitude*latitude , MPI_DOUBLE , 0, MPI_COMM_WORLD);
-        }else{
-            MPI_Gather(&send_world, longitude*latitude , MPI_DOUBLE ,NULL, 0, MPI_DOUBLE , 0, MPI_COMM_WORLD);
-        }
-
-        // remove ghostzones and construct global data from local data
-        if(mpi_rank==0){
-        for (int k = 0; k<buffer.size();k++){
+        integrate(world);
+        
+        
+        std::vector<double> data_send(long_div*lat_div);
+        
         for (uint64_t i = 1; i < latitude-1; ++i)
         for (uint64_t j = 1; j < longitude-1; ++j) {
-            uint64_t k_global = (i + offset_latitude * k/grid_x) * global_world.longitude
-                              + (j + offset_longitude * k%grid_x);
-            global_world.data[k_global] = buffer[k].data[i * longitude + j];
+            data_send[(i-1)*long_div + (j-1)] = world.data[i * longitude + j];
         }
-        }
-        }
-        if (!output_filename.empty()) {
-            // Only rank zero writes water history to file
-            if (mpi_rank == 0) {
+    
+        // TODO: gather the Temperature on rank zero
+        // remove ghostzones and construct global data from local data
+        if (mpi_rank == 0) {
+            std::vector<double> dat(long_div*lat_div*mpi_size);
+
+            MPI_Gather(&data_send[0], data_send.size(), MPI_DOUBLE, &dat[0], data_send.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+            
+            /*
+            std::vector<double> dat(world.longitude*world.latitude*mpi_size);
+            MPI_Gather(&world.data[0], world.data.size(), MPI_DOUBLE, &dat[0], world.data.size(), MPI_DOUBLE, 0, MPI_COMM_WORLD);
+            
+            
+            for (int r = 0; r < mpi_size; r++){
+                int off_lat = lat_div*(r / nx) - 1;
+                int off_long = long_div*(r % nx) - 1;
+                for (uint64_t i = 1; i < latitude-1; ++i)
+                for (uint64_t j = 1; j < longitude-1; ++j) {
+                    uint64_t k_global = (i + off_lat) * global_world.longitude
+                                      + (j + off_long);
+                    global_world.data[k_global] = dat[r*world.longitude*world.latitude + i * longitude + j];
+                }
+            }
+            */
+            for (int r = 0; r < mpi_size; r++){
+                int off_lat = lat_div*(r / nx) - 1;
+                int off_long = long_div*(r % nx) - 1;
+                for (uint64_t i = 1; i < latitude-1; ++i)
+                for (uint64_t j = 1; j < longitude-1; ++j) {
+                    uint64_t k_global = (i + off_lat) * global_world.longitude
+                                      + (j + off_long);
+                    global_world.data[k_global] = dat[r*long_div*lat_div + (i-1) * long_div + (j-1)];
+                }
+            }
+            if (!output_filename.empty()) {
+                // Only rank zero writes water history to file
                 write_hdf5(global_world, output_filename, iteration);
                 std::cout << iteration << " -- ";
                 stat(global_world);
             }
         }
-    }
+            else {
+                 MPI_Gather(&data_send[0], data_send.size(), MPI_DOUBLE, NULL, 0, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+                //MPI_Gather(&world.data[0], world.longitude*world.latitude, MPI_DOUBLE, NULL, 0, MPI_DOUBLE, 0, MPI_COMM_WORLD);
+            }
+        }
     auto end = std::chrono::steady_clock::now();
-    if(mpi_rank==0){
-        std::cout << "checksum      : " << checksum(global_world) << std::endl; // I don't see why not
+    if (mpi_rank == 0) {
+        std::cout << "checksum      : " << checksum(global_world) << std::endl;
         std::cout << "elapsed time  : " << (end - begin).count() / 1000000000.0 << " sec" << std::endl;
     }
 }
@@ -384,6 +397,7 @@ int main(int argc, char **argv) {
 
     // Get the rank of the process
     MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
+    
 
     // Get the name of the processor
     char processor_name[MPI_MAX_PROCESSOR_NAME];
